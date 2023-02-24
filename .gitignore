@@ -1,0 +1,17 @@
+# Virtual environment
+.venv/
+
+.aws-sam/
+
+# MacOs
+.DS_Store
+.Trashes
+Thumb.db
+
+# Byte-compiled
+__pycache__/
+*py[cod]
+
+# Distribution
+*.egg-info/
+*.egg
