@@ -2,3 +2,4 @@ pillow
 sympy
 numpy
 boto3
+autopep8

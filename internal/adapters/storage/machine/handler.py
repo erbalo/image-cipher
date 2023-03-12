@@ -11,7 +11,7 @@ class MachineStore(ImageStorage):
         super().__init__(file_name, extension)
 
 
-    def compute(self) -> Image.Image:
+    def compute(self, dir: str = None) -> Image.Image:
         file_name = self._full_file_name
         return Image.open(file_name)
 

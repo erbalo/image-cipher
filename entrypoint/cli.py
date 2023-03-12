@@ -1,8 +1,6 @@
 import sys
-import os, io
-import numpy as np
 
-#sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from PIL import Image
 from internal.application.images.service import Service as ImageService
