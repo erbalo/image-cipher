@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 
@@ -25,9 +26,12 @@ def handler(event, context):
 
     print(subject, '-', message)
 
+    skey = os.getenv('aws_access_key_id', '')
+    akey = os.getenv('aws_secret_access_key', '')
+
     s3_client = S3(
-        aws_access_key_id='AKIAQKN6BMPH2IFI5I4D',
-        aws_secret_access_key='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',
+        aws_access_key_id=skey,
+        aws_secret_access_key=akey,
         region_name='us-west-2'
     )
     storage = S3Storage('test/caja', 'jpeg', s3_client)
