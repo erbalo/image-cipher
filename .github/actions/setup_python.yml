@@ -1,0 +1,21 @@
+name: setup-python
+
+on: [workflow_call]
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"

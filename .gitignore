@@ -8,6 +8,10 @@
 .Trashes
 Thumb.db
 
+# Tests
+.pytest_cache
+.coverage
+
 # Byte-compiled
 __pycache__/
 *py[cod]

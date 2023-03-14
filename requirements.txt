@@ -3,3 +3,7 @@ sympy
 numpy
 boto3
 autopep8
+moto
+pytest
+pytest-mock
+pytest-cov
