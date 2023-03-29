@@ -14,11 +14,33 @@ env:
   repo: ${{ github.event.repository.name }}
 
 jobs:
+  unit-testing:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: ./.github/actions/setup-python/action.yml
+
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          cache: "pip" # caching pip dependencies
+
+      - name: Executing unit testing
+        run: |
+          pip install -r requirements.txt
+          echo "running unit tests..."
+
+          # Executing testing
+          PYTHONPATH=. coverage run -m pytest -v tests && coverage report -m
+
   check-dependencies-layer:
     name: Check depedencies layer
     runs-on: ubuntu-latest
     outputs:
       upload-layers: ${{ steps.validate-requirements.outputs.run-job }}
+    needs: unit-testing
 
     steps:
       - name: Checkout
@@ -63,18 +85,18 @@ jobs:
 
       # For more info: https://github.com/aws-actions/configure-aws-credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
 
       - name: Setup Python 3.9
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
-      - name: Zip dependencies and upload it to artifact manager
+      - name: Zip dependencies
         run: |
           mkdir python
           pip install -r requirements.txt -t python
@@ -84,13 +106,20 @@ jobs:
           dependencies="${short_id}_dependencies.zip"
           zip --quiet -r $dependencies python
 
+      - name: Upload dependencies to artifact manager
+        run: |
           # copy the file to S3 and install it in lambda layers
           path_key="$release_bucket_uri/$release_layer_folder/$repo/$branch_name/"
+          dependencies="${short_id}_dependencies.zip"
           aws s3 cp $dependencies $path_key
           # aws lambda publish-layer-version --layer-name $release_layer  --content S3Bucket=$release_bucket,S3Key=$release_key/$release_id --compatible-runtimes python3.9
 
   build-source-code:
-    name: Upload source code to artifact manager
+    if: |
+      always() &&
+      (needs.build-layer.result == 'skipped' || needs.build-layer.result == 'success')
+    continue-on-error: false
+    name: Build AWS lambda source code
     runs-on: ubuntu-latest
     needs: build-layer
 
@@ -100,14 +129,14 @@ jobs:
 
       # For more info: https://github.com/aws-actions/configure-aws-credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
 
       - name: Setup Python 3.9
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
@@ -116,7 +145,7 @@ jobs:
           source="${short_id}_source.zip"
           zip -r $source entrypoint internal
 
-      - name: Upload artifact source code
+      - name: Upload source code to artifact manager
         run: |
           echo '{"sha": "${{ github.sha }}", "branch": "${{ github.head_ref }}", "id": "${{ env.short_id }}", "repo": "${{ env.repo }}" }' > definitions.json
           path_key="$release_bucket_uri/$release_source_folder/$repo/$branch_name/"

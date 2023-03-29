@@ -1,0 +1,10 @@
+[run]
+source =
+    entrypoint
+    internal
+    tests
+
+data_file = .coverage/report
+
+[html]
+directory = .coverage/
