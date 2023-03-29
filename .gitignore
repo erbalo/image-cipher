@@ -11,6 +11,7 @@ Thumb.db
 # Tests
 .pytest_cache
 .coverage
+*coverage*
 
 # Byte-compiled
 __pycache__/

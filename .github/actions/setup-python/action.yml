@@ -1,0 +1,43 @@
+name: setup-python
+
+inputs:
+  runner-os:
+    required: true
+  custom-install-dir:
+    required: false
+  skip-install:
+    required: false
+    default: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+    - name: Cache PIP dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ inputs.runner-os }}-pip
+    - name: Install requirements
+      shell: bash
+      run: |
+        custom_dir="${{ inputs.custom-install-dir }}"
+        is_skip_install=${{ inputs.skip-install }}
+
+        if [ "$is_skip_install" = true ]; then
+            echo "Skipping install dependencies"
+        else
+            echo "Installing dependencies..."
+
+            if [ -z "$custom_dir" ]
+            then
+                pip install -r requirements.txt
+            else
+                echo "Creating custom install dir [$custom_dir]..."
+                mkdir $custom_dir
+                pip install -r requirements.txt -t $custom_dir
+            fi
+        fi

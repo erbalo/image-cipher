@@ -11,16 +11,16 @@ class MachineStore(ImageStorage):
         super().__init__(file_name, extension)
 
 
-    def compute(self, dir: str = None) -> Image.Image:
+    def compute(self, _dir: str = None) -> Image.Image:
         file_name = self._full_file_name
         return Image.open(file_name)
 
 
-    def save_key(self, image_bytes: bytes, dir: str = None):
+    def save_key(self, image_bytes: bytes, _dir: str = None):
         key_mem = Image.open(io.BytesIO(image_bytes))
         key_mem.save(self._key_name)
 
 
-    def save_encrypted(self, image_bytes: bytes, dir: str = None):
+    def save_encrypted(self, image_bytes: bytes, _dir: str = None):
         encrypted_mem = Image.open(io.BytesIO(image_bytes))
         encrypted_mem.save(self._encrypted_name)
