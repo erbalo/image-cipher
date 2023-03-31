@@ -1,4 +1,5 @@
 {
-    "editor.formatOnSave": true,
-    "prettier.semi": true
+  "editor.formatOnSave": true,
+  "prettier.semi": true,
+  "editor.minimap.enabled": false
 }

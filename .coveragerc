@@ -1,10 +1,24 @@
 [run]
-source =
-    entrypoint
-    internal
-    tests
+branch = True
+concurrency = multiprocessing
+parallel = True
+relative_files = True
 
-data_file = .coverage/report
+omit =
+    *test.py
+
+data_file = coverage-reports/report
+
+[report]
+ignore_errors = True
+
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
 
 [html]
-directory = .coverage/
+directory = coverage-reports/
+
+[xml]
+output = coverage-reports/coverage.xml
+

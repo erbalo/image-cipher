@@ -14,15 +14,15 @@ class ImageStorage(abc.ABC):
 
 
     @abc.abstractmethod
-    def compute(self, dir: str = None) -> Image.Image:
+    def compute(self, _dir: str = None) -> Image.Image:
         pass
 
 
     @abc.abstractmethod
-    def save_key(self, image_bytes: bytes, dir: str = None):
+    def save_key(self, image_bytes: bytes, _dir: str = None):
         pass
 
 
     @abc.abstractmethod
-    def save_encrypted(self, image_bytes: bytes, dir: str = None):
+    def save_encrypted(self, image_bytes: bytes, _dir: str = None):
         pass
