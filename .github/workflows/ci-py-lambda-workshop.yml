@@ -1,14 +1,12 @@
-name: ci-py-lambda
+name: ci-py-lambda-workshop
 
 on:
   pull_request:
     branches: [main]
 
 env:
-  release_bucket: draco-release-manager
-  release_bucket_uri: s3://draco-release-manager
-  release_source_folder: source
-  release_layer_folder: layers
+  release_bucket: kyc-release-manager
+  release_bucket_uri: s3://kyc-release-manager
   short_id: ${{ github.run_id }}
   branch_name: ${{ github.head_ref }}
   repo: ${{ github.event.repository.name }}
@@ -84,8 +82,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Build lambda layers artifact
+      - name: Build lambda source
         uses: ./.github/actions/build-lambda-source
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

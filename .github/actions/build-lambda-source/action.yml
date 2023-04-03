@@ -40,6 +40,7 @@ runs:
           echo '}'
         } > definitions.json
         #echo '{"sha": "${{ github.sha }}", "branch": "${{ github.head_ref }}", "id": "${{ env.short_id }}", "repo": "${{ env.repo }}" }' > definitions.json
+        cat definitions.json
         zip -r info.zip definitions.json
 
     - name: Upload source code to artifact manager

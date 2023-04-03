@@ -32,4 +32,3 @@ runs:
         path_key="$release_bucket_uri/$service_name/$branch_name/"
         echo "$path_key"
         aws s3 cp dependencies.zip $path_key
-        # aws lambda publish-layer-version --layer-name $release_layer  --content S3Bucket=$release_bucket,S3Key=$release_key/$release_id --compatible-runtimes python3.9
